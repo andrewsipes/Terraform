@@ -41,7 +41,7 @@ variable "vm_count" {
 variable "vm_name_prefix" {
   type        = string
   description = "Name of VM prefix"
-  default     =  "AnsibleLab"
+  default     =  "AnsibleLab-"
 }
 
 variable "vm_datastore" {
