@@ -24,6 +24,12 @@ variable "vsphere_datacenter" {
   type        = string
 }
 
+variable "vsphere_cluster" {
+  type        = string
+  description = "VMWare vSphere cluster"
+  default     = ""
+}
+
 variable "vsphere_template_folder" {
   type        = string
   description = "Template folder"
@@ -54,12 +60,6 @@ variable "vm_network" {
   description = "Network used for the vSphere virtual machines"
 }
 
-#variable "vm_linked_clone" {
-#  type        = string
-#  description = "Use linked clone to create the vSphere virtual machine from the template (true/false). If you would like to use the linked clone feature, your template need to have one and only one snapshot"
-#  default     = "false"
-#}
-
 variable "vm_cpu" {
   type        = string
   description = "Number of vCPU for the vSphere virtual machines"
@@ -72,15 +72,28 @@ variable "vm_ram" {
   default     = "2048"
 }
 
+variable "vm_disk"{
+    description = "Size of Disk, should be at least the size of the template disk"
+    type = number
+    default = 100
+}
+
 variable "vm_name" {
   type        = string
   description = "The name of the vSphere virtual machines and the hostname of the machine"
   default     = "VM"
 }
 
-#variable "vm-guest-id" {
-#  type        = string
-#  description = "The ID of virtual machines operating system"#}
+variable "vm_domain" {
+  type        = string
+  description = "Linux virtual machine domain name for the machine. This, along with host_name, make up the FQDN of the virtual machine"
+  default     = ""
+}
+
+variable "vm_guest_id" {
+  type        = string
+  description = "The ID of virtual machines operating system"
+}
 
 variable "vm_template_name" {
   type        = string
