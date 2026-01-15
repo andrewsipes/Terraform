@@ -44,10 +44,10 @@ variable "vm_count" {
   default     =  1
 }
 
-variable "vm_name_prefix" {
+variable "vm_alias" {
   type        = string
   description = "Name of VM prefix"
-  default     =  "AnsibleLab-"
+  default     =  ""
 }
 
 variable "vm_datastore" {

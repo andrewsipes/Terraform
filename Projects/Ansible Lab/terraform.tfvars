@@ -15,12 +15,12 @@ vsphere_template_folder = "Templates"
 # VM variables
 
 vm_count = 3
-vm_name_prefix = "Asipes-AnsibleLab-"
 vm_datastore = "Datastore 1"
 vm_network = "VM_Switch_Network"
 vm_cpu = "4"
 vm_ram = "4096"
 vm_disk = 100
+vm_alias = "Asipes"
 vm_name = "Ubuntu"
 vm_domain = ""
 vm_guest_id= "ubuntu64Guest"
