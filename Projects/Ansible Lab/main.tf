@@ -44,16 +44,21 @@ resource "vsphere_virtual_machine" "vm" {
   folder = var.vm_folder
   num_cpus = var.vm_cpu
   memory   = var.vm_ram
-  guest_id = var.vm_guest_id
+  guest_id = data.vsphere_virtual_machine.template.guest_id
+  firmware = data.vsphere_virtual_machine.template.firmware
+  scsi_type = data.vsphere_virtual_machine.template.scsi_type
 
   network_interface {
     network_id = data.vsphere_network.network.id
+    adapter_type = data.vsphere_virtual_machine.template.network_interface_types[0]
   }
 
   disk {
     label = "${var.vm_alias}-${var.vm_name}-${count.index + 1}-disk"
     size  = data.vsphere_virtual_machine.template.disks[0].size
     thin_provisioned = data.vsphere_virtual_machine.template.disks[0].thin_provisioned
+
+    unit_number = data.vsphere_virtual_machine.template.disks[0].unit_number
   }
 
   clone {
