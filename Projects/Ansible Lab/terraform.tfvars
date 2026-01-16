@@ -15,7 +15,7 @@ vsphere_template_folder = "Templates"
 # VM variables
 
 vm_count = 3
-vm_folder = "asi"
+vm_folder = ""
 vm_datastore = "Datastore 1"
 vm_network = "VM_Switch_Network"
 vm_cpu = "4"
