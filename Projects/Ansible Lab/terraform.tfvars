@@ -16,8 +16,8 @@ vsphere_template_folder = "Templates"
 
 vm_count = 3
 vm_folder = ""
-vm_datastore = "Datastore 1"
-vm_network = "VM_Switch_Network"
+vm_datastore = ""
+vm_network = ""
 vm_cpu = "4"
 vm_ram = "4096"
 vm_disk = 100
