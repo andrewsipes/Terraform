@@ -50,6 +50,12 @@ variable "vm_alias" {
   default     =  ""
 }
 
+variable "vm_folder" {
+  type        = string
+  description = "folder where cloned vms should reside"
+  default = ""
+}
+
 variable "vm_datastore" {
   type        = string
   description = "Datastore used for the vSphere virtual machines"

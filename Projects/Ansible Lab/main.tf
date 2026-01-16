@@ -38,10 +38,10 @@ data "vsphere_virtual_machine" "template" {
 resource "vsphere_virtual_machine" "vm" {
   count = var.vm_count
 
-  name             = "${var.vm_alias}${var.vm_name}-${count.index + 1}"
+  name             = "${var.vm_alias}-${var.vm_name}-${count.index + 1}"
   resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
   datastore_id     = data.vsphere_datastore.ds.id
-
+  folder = var.vm_folder
   num_cpus = var.vm_cpu
   memory   = var.vm_ram
   guest_id = var.vm_guest_id
@@ -51,17 +51,16 @@ resource "vsphere_virtual_machine" "vm" {
   }
 
   disk {
-    label = "${var.vm_alias}${var.vm_name}-${count.index + 1}-disk"
-    thin_provisioned = false
-    eagerly_scrub = true
-    size  = var.vm_disk
+    label = "${var.vm_alias}-${var.vm_name}-${count.index + 1}-disk"
+    size  = data.vsphere_virtual_machine.template.disks[0].size
+    thin_provisioned = data.vsphere_virtual_machine.template.disks[0].thin_provisioned
   }
 
   clone {
     template_uuid = data.vsphere_virtual_machine.template.id
     customize {
       linux_options {
-        host_name = "${var.vm_alias}${var.vm_name}-${count.index + 1}"
+        host_name = "${var.vm_alias}-${var.vm_name}-${count.index + 1}"
         domain    = var.vm_domain
       }     
       network_interface {}
