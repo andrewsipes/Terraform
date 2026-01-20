@@ -18,7 +18,6 @@ vm_folder = "Migrate Training"
 vm_datastore = "Datastore 2"
 vm_network = "VM_Switch_Network"
 vm_alias = "Trainer"
-vm_domain = ""
 
 #LINUX
 linuxvm_count = 1
@@ -28,6 +27,7 @@ linuxvm_disk = 100
 linuxvm_name = "Ubuntu"
 linuxvm_guest_id= "ubuntu64Guest"
 linuxvm_template_name = "Ubuntu-2204-Template"
+linuxvm_domain = ""
 
 #WINDOWS
 winvm_count = 1

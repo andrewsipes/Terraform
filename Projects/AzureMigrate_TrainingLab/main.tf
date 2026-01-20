@@ -50,7 +50,7 @@ data "vsphere_virtual_machine" "winapptemplate" {
 resource "vsphere_virtual_machine" "linuxvm" {
   count = var.linuxvm_count
 
-  name             = "${var.vm_alias}-${var.vm_name}" //-${count.index + 1}"
+  name             = "${var.vm_alias}-${var.linuxvm_name}" //-${count.index + 1}"
   resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
   datastore_id     = data.vsphere_datastore.ds.id
   folder = var.vm_folder
@@ -78,7 +78,7 @@ resource "vsphere_virtual_machine" "linuxvm" {
     customize {
       linux_options {
         host_name = "${var.vm_alias}-${var.linuxvm_name}" //-${count.index + 1}"
-        domain    = var.vm_domain
+        domain    = var.linuxvm_domain
       }     
       network_interface {}
       timeout = 30
