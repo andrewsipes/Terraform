@@ -1,5 +1,5 @@
 # main.tf
-# Purpose: Main template file that deploys ansible lab
+# Purpose: Main template file that deploys the training lab
 
 ## vSphere
 provider "vsphere" {
@@ -79,6 +79,7 @@ resource "vsphere_virtual_machine" "linuxvm" {
       linux_options {
         host_name = "${var.vm_alias}-${var.linuxvm_name}" //-${count.index + 1}"
         domain    = var.linuxvm_domain
+        time_zone = "America/New_York"
       }     
       network_interface {}
       timeout = 30
@@ -116,9 +117,10 @@ resource "vsphere_virtual_machine" "winvm" {
     template_uuid = data.vsphere_virtual_machine.wintemplate.id
     customize {
       windows_options {
+        run_once_command_list = ["net user administrator /logonpasswordchg:yes"]
         computer_name = "${var.vm_alias}-${var.winvm_name}" //-${count.index + 1}"
-        workgroup    = "workgroup"
-        time_zone = 005
+        time_zone = 035
+        auto_logon = false
       }     
       network_interface {}
       timeout = 30
@@ -156,9 +158,10 @@ resource "vsphere_virtual_machine" "winappvm" {
     template_uuid = data.vsphere_virtual_machine.winapptemplate.id
     customize {
      windows_options {
-        computer_name = "${var.vm_alias}-${var.winvm_name}" //-${count.index + 1}"
-        workgroup    = "workgroup"
-        time_zone = 005
+        run_once_command_list = ["net user administrator /logonpasswordchg:yes"]
+        computer_name = "${var.vm_alias}-${var.winappvm_name}" //-${count.index + 1}"
+        time_zone = 035
+        auto_logon = false
       }     
       network_interface {}
       timeout = 30
