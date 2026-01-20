@@ -48,7 +48,7 @@ data "vsphere_virtual_machine" "winapptemplate" {
 
 #linux
 resource "vsphere_virtual_machine" "linuxvm" {
-  count = var.vm_count
+  count = var.linuxvm_count
 
   name             = "${var.vm_alias}-${var.vm_name}" //-${count.index + 1}"
   resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
@@ -74,7 +74,7 @@ resource "vsphere_virtual_machine" "linuxvm" {
   }
 
   clone {
-    template_uuid = data.vsphere_virtual_machine.template.id
+    template_uuid = data.vsphere_virtual_machine.linuxtemplate.id
     customize {
       linux_options {
         host_name = "${var.vm_alias}-${var.linuxvm_name}" //-${count.index + 1}"
@@ -87,7 +87,7 @@ resource "vsphere_virtual_machine" "linuxvm" {
 }
 
 resource "vsphere_virtual_machine" "winvm" {
-  count = var.vm_count
+  count = var.winvm_count
 
   name             = "${var.vm_alias}-${var.winvm_name}" //-${count.index + 1}"
   resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
@@ -127,7 +127,7 @@ resource "vsphere_virtual_machine" "winvm" {
 }
 
 resource "vsphere_virtual_machine" "winappvm" {
-  count = var.vm_count
+  count = var.winappvm_count
 
   name             = "${var.vm_alias}-${var.winappvm_name}" //-${count.index + 1}"
   resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
@@ -146,7 +146,7 @@ resource "vsphere_virtual_machine" "winappvm" {
 
   disk {
     label = "${var.vm_alias}-${var.winappvm_name}-disk" //-${count.index + 1}-disk"
-    size  = data.vsphere_virtual_machine.template.disks[0].size
+    size  = data.vsphere_virtual_machine.winapptemplate.disks[0].size
     thin_provisioned = data.vsphere_virtual_machine.winapptemplate.disks[0].thin_provisioned
 
     unit_number = data.vsphere_virtual_machine.winapptemplate.disks[0].unit_number

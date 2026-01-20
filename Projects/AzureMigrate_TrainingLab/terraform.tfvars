@@ -14,8 +14,8 @@ vsphere_template_folder = "Templates"
 #######################################
 # VM variables
 
-vm_folder = "MigrateTraining"
-vm_datastore = "Datastore 1"
+vm_folder = "Migrate Training"
+vm_datastore = "Datastore 2"
 vm_network = "VM_Switch_Network"
 vm_alias = "Trainer"
 vm_domain = ""
