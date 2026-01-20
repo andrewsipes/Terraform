@@ -117,7 +117,7 @@ resource "vsphere_virtual_machine" "winvm" {
     template_uuid = data.vsphere_virtual_machine.wintemplate.id
     customize {
       windows_options {
-        run_once_command_list = ["net user administrator /logonpasswordchg:yes"]
+        run_once_command_list = ["net user administrator /logonpasswordchg:yes", "shutdown /r /t 0"]
         computer_name = "${var.vm_alias}-${var.winvm_name}" //-${count.index + 1}"
         time_zone = 035
         auto_logon = false
@@ -158,7 +158,7 @@ resource "vsphere_virtual_machine" "winappvm" {
     template_uuid = data.vsphere_virtual_machine.winapptemplate.id
     customize {
      windows_options {
-        run_once_command_list = ["net user administrator /logonpasswordchg:yes"]
+        run_once_command_list = ["net user administrator /logonpasswordchg:yes", "shutdown /r /t 0"]
         computer_name = "${var.vm_alias}-${var.winappvm_name}" //-${count.index + 1}"
         time_zone = 035
         auto_logon = false
