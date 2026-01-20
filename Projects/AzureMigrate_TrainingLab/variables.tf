@@ -39,11 +39,6 @@ variable "vsphere_template_folder" {
 #######################################
 # VM variables
 
-variable "vm_count" {
-  description = "Number of VM"
-  default     =  1
-}
-
 variable "vm_alias" {
   type        = string
   description = "Name of VM prefix"
@@ -66,42 +61,128 @@ variable "vm_network" {
   description = "Network used for the vSphere virtual machines"
 }
 
-variable "vm_cpu" {
+#LINUX
+variable "linuxvm_count" {
+  description = "Number of VM"
+  default     =  1
+}
+
+variable "linuxvm_cpu" {
   type        = string
   description = "Number of vCPU for the vSphere virtual machines"
   default     = "2"
 }
 
-variable "vm_ram" {
+variable "linuxvm_ram" {
   type        = string
   description = "Amount of RAM for the vSphere virtual machines (example: 2048)"
   default     = "2048"
 }
 
-variable "vm_disk"{
+variable "linuxvm_disk"{
     description = "Size of Disk, should be at least the size of the template disk"
     type = number
     default = 100
 }
 
-variable "vm_name" {
+variable "linuxvm_name" {
   type        = string
   description = "The name of the vSphere virtual machines and the hostname of the machine"
   default     = "VM"
 }
 
-variable "vm_domain" {
+variable "linuxvm_domain" {
   type        = string
   description = "Linux virtual machine domain name for the machine. This, along with host_name, make up the FQDN of the virtual machine"
   default     = ""
 }
 
-variable "vm_guest_id" {
+variable "linuxvm_guest_id" {
   type        = string
   description = "The ID of virtual machines operating system"
 }
 
-variable "vm_template_name" {
+variable "linuxvm_template_name" {
+  type        = string
+  description = "The template to clone to create the VM"
+}
+
+#WINDOWS
+variable "winvm_count" {
+  description = "Number of VM"
+  default     =  1
+}
+
+variable "winvm_cpu" {
+  type        = string
+  description = "Number of vCPU for the vSphere virtual machines"
+  default     = "2"
+}
+
+variable "winvm_ram" {
+  type        = string
+  description = "Amount of RAM for the vSphere virtual machines (example: 2048)"
+  default     = "2048"
+}
+
+variable "winvm_disk"{
+    description = "Size of Disk, should be at least the size of the template disk"
+    type = number
+    default = 100
+}
+
+variable "winvm_name" {
+  type        = string
+  description = "The name of the vSphere virtual machines and the hostname of the machine"
+  default     = "VM"
+}
+
+variable "winvm_guest_id" {
+  type        = string
+  description = "The ID of virtual machines operating system"
+}
+
+variable "winvm_template_name" {
+  type        = string
+  description = "The template to clone to create the VM"
+}
+
+#WINDOWS APP
+variable "winappvm_count" {
+  description = "Number of VM"
+  default     =  1
+}
+
+variable "winappvm_cpu" {
+  type        = string
+  description = "Number of vCPU for the vSphere virtual machines"
+  default     = "2"
+}
+
+variable "winappvm_ram" {
+  type        = string
+  description = "Amount of RAM for the vSphere virtual machines (example: 2048)"
+  default     = "2048"
+}
+
+variable "winappvm_disk"{
+    description = "Size of Disk, should be at least the size of the template disk"
+    type = number
+    default = 100
+}
+
+variable "winappvm_name" {
+  type        = string
+  description = "The name of the vSphere virtual machines and the hostname of the machine"
+  default     = "VM"
+}
+
+variable "winappvm_guest_id" {
+  type        = string
+  description = "The ID of virtual machines operating system"
+}
+
+variable "winappvm_template_name" {
   type        = string
   description = "The template to clone to create the VM"
 }
