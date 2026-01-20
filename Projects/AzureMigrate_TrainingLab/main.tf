@@ -115,9 +115,10 @@ resource "vsphere_virtual_machine" "winvm" {
   clone {
     template_uuid = data.vsphere_virtual_machine.wintemplate.id
     customize {
-      linux_options {
-        host_name = "${var.vm_alias}-${var.winvm_name}" //-${count.index + 1}"
-        domain    = var.vm_domain
+      windows_options {
+        computer_name = "${var.vm_alias}-${var.winvm_name}" //-${count.index + 1}"
+        workgroup    = "workgroup"
+        time_zone = 005
       }     
       network_interface {}
       timeout = 30
@@ -154,9 +155,10 @@ resource "vsphere_virtual_machine" "winappvm" {
   clone {
     template_uuid = data.vsphere_virtual_machine.winapptemplate.id
     customize {
-      linux_options {
-        host_name = "${var.vm_alias}-${var.winappvm_name}" //-${count.index + 1}"
-        domain    = var.vm_domain
+     windows_options {
+        computer_name = "${var.vm_alias}-${var.winvm_name}" //-${count.index + 1}"
+        workgroup    = "workgroup"
+        time_zone = 005
       }     
       network_interface {}
       timeout = 30
