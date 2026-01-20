@@ -1,6 +1,24 @@
 # terraform.tfvars
 # Purpose: Defines variable values
 
+# Engineers
+abrs_engineer = {
+    Andrew = {
+        alias = "Andrew"
+        datastore = "Datastore 1"
+    },
+
+    Trainer = {
+        alias = "Trainer"
+        datastore = "Datastore 2"
+    },
+
+    Test = {
+        alias = "test"
+        datastore = "Datastore 1"
+    }
+}
+
 #######################################
 # VCenter variables
 
@@ -17,7 +35,7 @@ vsphere_template_folder = "Templates"
 vm_folder = "Migrate Training"
 vm_datastore = "Datastore 2"
 vm_network = "VM_Switch_Network"
-vm_alias = "Trainer"
+vm_alias = "Default"
 
 #LINUX
 linuxvm_count = 1
@@ -34,8 +52,8 @@ winvm_count = 1
 winvm_cpu = "4"
 winvm_ram = "4096"
 winvm_disk = 100
-winvm_name = "Windows"
-winvm_guest_id= "windows9_64Guest"
+winvm_name = "Win"
+winvm_guest_id= "windows964Guest"
 winvm_template_name = "Windows-2022-Template"
 
 #WINDOWS APP
@@ -43,6 +61,6 @@ winappvm_count = 1
 winappvm_cpu = "4"
 winappvm_ram = "4096"
 winappvm_disk = 100
-winappvm_name = "MigrateAppliance"
-winappvm_guest_id= "windows9_64Guest"
+winappvm_name = "MigApp"
+winappvm_guest_id= "windows964Guest"
 winappvm_template_name = "Windows-2022-Template"

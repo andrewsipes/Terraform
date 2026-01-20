@@ -1,7 +1,7 @@
 # main.tf
 # Purpose: Main template file that deploys the training lab
 
-## vSphere
+# vSphere
 provider "vsphere" {
   user                 = var.vsphere_user
   password             = var.vsphere_password
@@ -20,7 +20,8 @@ data "vsphere_compute_cluster" "cluster" {
 
 # VM
 data "vsphere_datastore" "ds" {
-  name          = var.vm_datastore
+  for_each      = var.abrs_engineer
+  name          = each.value.datastore #var.vm_datastore
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
@@ -48,11 +49,12 @@ data "vsphere_virtual_machine" "winapptemplate" {
 
 #linux
 resource "vsphere_virtual_machine" "linuxvm" {
-  count = var.linuxvm_count
+  for_each = var.abrs_engineer
+  #count = var.linuxvm_count
 
-  name             = "${var.vm_alias}-${var.linuxvm_name}" //-${count.index + 1}"
+  name             = "${each.value.alias}-${var.linuxvm_name}" //-${count.index + 1}"
   resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
-  datastore_id     = data.vsphere_datastore.ds.id
+  datastore_id     = data.vsphere_datastore.ds[each.key].id
   folder = var.vm_folder
   num_cpus = var.linuxvm_cpu
   memory   = var.linuxvm_ram
@@ -66,7 +68,7 @@ resource "vsphere_virtual_machine" "linuxvm" {
   }
 
   disk {
-    label = "${var.vm_alias}-${var.linuxvm_name}-disk"//${count.index + 1}-disk"
+    label = "${each.value.alias}-${var.linuxvm_name}-disk"//${count.index + 1}-disk"
     size  = data.vsphere_virtual_machine.linuxtemplate.disks[0].size
     thin_provisioned = data.vsphere_virtual_machine.linuxtemplate.disks[0].thin_provisioned
 
@@ -77,7 +79,7 @@ resource "vsphere_virtual_machine" "linuxvm" {
     template_uuid = data.vsphere_virtual_machine.linuxtemplate.id
     customize {
       linux_options {
-        host_name = "${var.vm_alias}-${var.linuxvm_name}" //-${count.index + 1}"
+        host_name = "${each.value.alias}-${var.linuxvm_name}" //-${count.index + 1}"
         domain    = var.linuxvm_domain
         time_zone = "America/New_York"
       }     
@@ -88,11 +90,12 @@ resource "vsphere_virtual_machine" "linuxvm" {
 }
 
 resource "vsphere_virtual_machine" "winvm" {
-  count = var.winvm_count
+  for_each = var.abrs_engineer
+  #count = var.winvm_count
 
-  name             = "${var.vm_alias}-${var.winvm_name}" //-${count.index + 1}"
+  name             = "${each.value.alias}-${var.winvm_name}" //-${count.index + 1}"
   resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
-  datastore_id     = data.vsphere_datastore.ds.id
+  datastore_id     = data.vsphere_datastore.ds[each.key].id
   folder = var.vm_folder
   num_cpus = var.winvm_cpu
   memory   = var.winvm_ram
@@ -106,7 +109,7 @@ resource "vsphere_virtual_machine" "winvm" {
   }
 
   disk {
-    label = "${var.vm_alias}-${var.winvm_name}-disk" //-${count.index + 1}-disk"
+    label = "${each.value.alias}-${var.winvm_name}-disk" //-${count.index + 1}-disk"
     size  = data.vsphere_virtual_machine.wintemplate.disks[0].size
     thin_provisioned = data.vsphere_virtual_machine.wintemplate.disks[0].thin_provisioned
 
@@ -118,7 +121,7 @@ resource "vsphere_virtual_machine" "winvm" {
     customize {
       windows_options {
         run_once_command_list = ["net user administrator /logonpasswordchg:yes", "shutdown /r /t 0"]
-        computer_name = "${var.vm_alias}-${var.winvm_name}" //-${count.index + 1}"
+        computer_name = "${each.value.alias}-${var.winvm_name}" //-${count.index + 1}"
         time_zone = 035
         auto_logon = false
       }     
@@ -129,11 +132,12 @@ resource "vsphere_virtual_machine" "winvm" {
 }
 
 resource "vsphere_virtual_machine" "winappvm" {
-  count = var.winappvm_count
+  for_each = var.abrs_engineer
+  #count = var.winappvm_count
 
-  name             = "${var.vm_alias}-${var.winappvm_name}" //-${count.index + 1}"
+  name             = "${each.value.alias}-${var.winappvm_name}" //-${count.index + 1}"
   resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
-  datastore_id     = data.vsphere_datastore.ds.id
+  datastore_id     = data.vsphere_datastore.ds[each.key].id
   folder = var.vm_folder
   num_cpus = var.winappvm_cpu
   memory   = var.winappvm_ram
@@ -147,7 +151,7 @@ resource "vsphere_virtual_machine" "winappvm" {
   }
 
   disk {
-    label = "${var.vm_alias}-${var.winappvm_name}-disk" //-${count.index + 1}-disk"
+    label = "${each.value.alias}-${var.winappvm_name}-disk" //-${count.index + 1}-disk"
     size  = data.vsphere_virtual_machine.winapptemplate.disks[0].size
     thin_provisioned = data.vsphere_virtual_machine.winapptemplate.disks[0].thin_provisioned
 
@@ -159,7 +163,7 @@ resource "vsphere_virtual_machine" "winappvm" {
     customize {
      windows_options {
         run_once_command_list = ["net user administrator /logonpasswordchg:yes", "shutdown /r /t 0"]
-        computer_name = "${var.vm_alias}-${var.winappvm_name}" //-${count.index + 1}"
+        computer_name = "${each.value.alias}-${var.winappvm_name}" //-${count.index + 1}"
         time_zone = 035
         auto_logon = false
       }     
