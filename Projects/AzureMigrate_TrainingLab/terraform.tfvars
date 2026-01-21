@@ -50,7 +50,7 @@ linuxvm_domain = ""
 #WINDOWS
 winvm_count = 1
 winvm_cpu = "4"
-winvm_ram = "4096"
+winvm_ram = "8192"
 winvm_disk = 100
 winvm_name = "Win"
 winvm_guest_id= "windows964Guest"
@@ -59,7 +59,7 @@ winvm_template_name = "Windows-2022-Template"
 #WINDOWS APP
 winappvm_count = 1
 winappvm_cpu = "4"
-winappvm_ram = "4096"
+winappvm_ram = "8192"
 winappvm_disk = 100
 winappvm_name = "MigApp"
 winappvm_guest_id= "windows964Guest"
