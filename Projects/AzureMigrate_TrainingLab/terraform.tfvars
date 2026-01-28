@@ -3,31 +3,21 @@
 
 # Engineers
 abrs_engineer = {
-    Andrew = {
-        alias = "Andrew"
+    Train = {
+        alias = "Train"
         datastore = "Datastore 1"
-    },
 
-    Trainer = {
-        alias = "Trainer"
-        datastore = "Datastore 2"
-    },
-
-    Test = {
-        alias = "test"
-        datastore = "Datastore 1"
-    }
 }
 
 #######################################
 # VCenter variables
 
-#vsphere_user = 
-#vsphere_password = 
-#vsphere_server =
-#vsphere_datacenter =
-vsphere_cluster = "ESXi"
-vsphere_template_folder = "Templates"
+# vsphere_user = 
+# vsphere_password = 
+# vsphere_server = 
+# vsphere_datacenter = 
+# vsphere_cluster = "ESXi"
+# vsphere_template_folder = "Templates"
 
 #######################################
 # VM variables
