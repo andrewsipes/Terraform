@@ -45,6 +45,11 @@ data "vsphere_virtual_machine" "winapptemplate" {
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
+data "vsphere_virtual_machine" "pwinapptemplate" {
+  name          = "/${var.vsphere_datacenter}/vm/${var.vsphere_template_folder}/${var.pwinappvm_template_name}"
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
+
 # Create VMs
 
 #linux
@@ -122,7 +127,11 @@ resource "vsphere_virtual_machine" "winvm" {
       windows_options {
         computer_name = "${each.value.alias}-${var.winvm_name}"
         run_once_command_list = ["cmd.exe /c net user Administrator /logonpasswordchg:yes",
-        "cmd.exe /c tzutil /s \"Eastern Standard Time\""]
+        "cmd.exe /c tzutil /s \"Eastern Standard Time\"", 
+        "cmd.exe /c powershell -Command \"Set-NetConnectionProfile -Name 'corp.microsoft.com' -NetworkCategory Private\"",
+        "cmd.exe /c powershell -Command \"Disable-PSRemoting -Force\"", 
+        "cmd.exe /c powershell -Command \"Get-NetFirewallRule -DisplayGroup 'Windows Remote Management' | Set-NetFirewallRule -Enabled False\"",
+        "cmd.exe /c powershell -Command \"logoff\"",]
       }    
       network_interface {}
       timeout = 120
@@ -163,7 +172,52 @@ resource "vsphere_virtual_machine" "winappvm" {
      windows_options {
         computer_name = "${each.value.alias}-${var.winappvm_name}" //-${count.index + 1}"
         run_once_command_list = ["cmd.exe /c net user Administrator /logonpasswordchg:yes",
-        "cmd.exe /c tzutil /s \"Eastern Standard Time\""]
+        "cmd.exe /c tzutil /s \"Eastern Standard Time\"",
+        "cmd.exe /c powershell -Command \"Set-NetConnectionProfile -Name 'corp.microsoft.com' -NetworkCategory Private\"",
+        "cmd.exe /c powershell -Command \"logoff\"",]
+      }     
+      network_interface {}
+      timeout = 120
+    }
+  }
+}
+
+resource "vsphere_virtual_machine" "pwinappvm" {
+  for_each = var.abrs_engineer
+  #count = var.winappvm_count
+
+  name             = "${each.value.alias}-${var.pwinappvm_name}" //-${count.index + 1}"
+  resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
+  datastore_id     = data.vsphere_datastore.ds[each.key].id
+  folder = var.vm_folder
+  num_cpus = var.pwinappvm_cpu
+  memory   = var.pwinappvm_ram
+  guest_id = data.vsphere_virtual_machine.pwinapptemplate.guest_id
+  firmware = data.vsphere_virtual_machine.pwinapptemplate.firmware
+  scsi_type = data.vsphere_virtual_machine.pwinapptemplate.scsi_type
+
+  network_interface {
+    network_id = data.vsphere_network.network.id
+    adapter_type = data.vsphere_virtual_machine.pwinapptemplate.network_interface_types[0]
+  }
+
+  disk {
+    label = "${each.value.alias}-${var.pwinappvm_name}-disk" //-${count.index + 1}-disk"
+    size  = data.vsphere_virtual_machine.pwinapptemplate.disks[0].size
+    thin_provisioned = data.vsphere_virtual_machine.pwinapptemplate.disks[0].thin_provisioned
+
+    unit_number = data.vsphere_virtual_machine.pwinapptemplate.disks[0].unit_number
+  }
+
+  clone {
+    template_uuid = data.vsphere_virtual_machine.pwinapptemplate.id
+    customize {
+     windows_options {
+        computer_name = "${each.value.alias}-${var.pwinappvm_name}" //-${count.index + 1}"
+        run_once_command_list = ["cmd.exe /c net user Administrator /logonpasswordchg:yes",
+        "cmd.exe /c tzutil /s \"Eastern Standard Time\"",
+        "cmd.exe /c powershell -Command \"Set-NetConnectionProfile -Name 'corp.microsoft.com' -NetworkCategory Private\"",
+        "cmd.exe /c powershell -Command \"logoff\"",]
       }     
       network_interface {}
       timeout = 120

@@ -197,3 +197,43 @@ variable "winappvm_template_name" {
   type        = string
   description = "The template to clone to create the VM"
 }
+
+#PHYS WINDOWS APP
+variable "pwinappvm_count" {
+  description = "Number of VM"
+  default     =  1
+}
+
+variable "pwinappvm_cpu" {
+  type        = string
+  description = "Number of vCPU for the vSphere virtual machines"
+  default     = "2"
+}
+
+variable "pwinappvm_ram" {
+  type        = string
+  description = "Amount of RAM for the vSphere virtual machines (example: 2048)"
+  default     = "2048"
+}
+
+variable "pwinappvm_disk"{
+    description = "Size of Disk, should be at least the size of the template disk"
+    type = number
+    default = 100
+}
+
+variable "pwinappvm_name" {
+  type        = string
+  description = "The name of the vSphere virtual machines and the hostname of the machine"
+  default     = "VM"
+}
+
+variable "pwinappvm_guest_id" {
+  type        = string
+  description = "The ID of virtual machines operating system"
+}
+
+variable "pwinappvm_template_name" {
+  type        = string
+  description = "The template to clone to create the VM"
+}

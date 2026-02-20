@@ -4,8 +4,9 @@
 # Engineers
 abrs_engineer = {
     Train = {
-        alias = "Train"
-        datastore = "Datastore 1"
+        alias = ""
+        datastore = ""
+    }
 
 }
 
@@ -54,3 +55,12 @@ winappvm_disk = 100
 winappvm_name = "MigApp"
 winappvm_guest_id= "windows964Guest"
 winappvm_template_name = "Windows-2022-Template"
+
+#PHYS WINDOWS APP
+pwinappvm_count = 1
+pwinappvm_cpu = "4"
+pwinappvm_ram = "8192"
+pwinappvm_disk = 100
+pwinappvm_name = "PMigApp"
+pwinappvm_guest_id= "windows964Guest"
+pwinappvm_template_name = "Windows-2022-Template"
