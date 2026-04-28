@@ -156,6 +156,13 @@ resource "vsphere_virtual_machine" "winappvm" {
     unit_number = data.vsphere_virtual_machine.winapptemplate.disks[0].unit_number
   }
 
+  disk {
+    label = "${each.value.alias}-${var.winappvm_name}-data-disk"
+    size  = data.vsphere_virtual_machine.winapptemplate.disks[1].size
+    thin_provisioned = data.vsphere_virtual_machine.winapptemplate.disks[1].thin_provisioned
+    unit_number = data.vsphere_virtual_machine.winapptemplate.disks[1].unit_number
+  }
+
   clone {
     template_uuid = data.vsphere_virtual_machine.winapptemplate.id
     customize {

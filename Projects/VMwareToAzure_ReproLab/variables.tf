@@ -182,6 +182,12 @@ variable "winappvm_disk"{
     default = 100
 }
 
+variable "winappvm_data_disk"{
+    description = "Size of Disk, should be at least the size of the template disk"
+    type = number
+    default = 100
+}
+
 variable "winappvm_name" {
   type        = string
   description = "The name of the vSphere virtual machines and the hostname of the machine"
