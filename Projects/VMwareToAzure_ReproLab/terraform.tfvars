@@ -7,7 +7,6 @@ abrs_engineer = {
         alias = "Asipes"
         datastore = "Datastore 1"
     },
-
 }
 
 #######################################
@@ -23,7 +22,7 @@ vsphere_template_folder = "Templates"
 #######################################
 # VM variables
 
-vm_folder = "Migrate Training"
+vm_folder = "asipes"
 vm_datastore = "Datastore 2"
 vm_network = "VM_Switch_Network"
 vm_alias = "Default"
@@ -55,12 +54,3 @@ winappvm_disk = 100
 winappvm_name = "MigApp"
 winappvm_guest_id= "windows964Guest"
 winappvm_template_name = "Windows-2022-Template"
-
-#PHYS WINDOWS APP
-pwinappvm_count = 1
-pwinappvm_cpu = "4"
-pwinappvm_ram = "8192"
-pwinappvm_disk = 100
-pwinappvm_name = "PMigApp"
-pwinappvm_guest_id= "windows964Guest"
-pwinappvm_template_name = "Windows-2022-Template"
