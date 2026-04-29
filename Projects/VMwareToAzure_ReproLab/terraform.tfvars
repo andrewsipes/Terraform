@@ -36,6 +36,7 @@ linuxvm_name = "Ubuntu"
 linuxvm_guest_id= "ubuntu64Guest"
 linuxvm_template_name = "Ubuntu-2204-Template"
 linuxvm_domain = ""
+linuxvm_rootpass = "P@ssw0rd"
 
 #WINDOWS
 winvm_count = 1

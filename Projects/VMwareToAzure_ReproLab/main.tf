@@ -81,6 +81,9 @@ resource "vsphere_virtual_machine" "linuxvm" {
         host_name = "${each.value.alias}-${var.linuxvm_name}"
         domain    = var.linuxvm_domain
         time_zone = "America/New_York"
+        run_once_command_list = ["sudo bash -c "echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config"",
+        "Sudo systemctl restart ssh",
+        "Sudo bash -c "echo 'root:{var.linuxvm_rootpass}' | sudo chpasswd""]
       }     
       network_interface {}
       timeout = 30
@@ -121,6 +124,7 @@ resource "vsphere_virtual_machine" "winvm" {
         computer_name = "${each.value.alias}-${var.winvm_name}"
         run_once_command_list = ["cmd.exe /c net user Administrator /logonpasswordchg:yes",
         "cmd.exe /c tzutil /s \"Eastern Standard Time\"", 
+        "powershell Enable-NetFirewallRule -DisplayGroup "Windows Management Instrumentation (WMI)"",
         "cmd.exe /c powershell -Command \"Set-NetConnectionProfile -Name 'corp.microsoft.com' -NetworkCategory Private\"",
         "cmd.exe /c powershell -Command \"logoff\"",]
       }    

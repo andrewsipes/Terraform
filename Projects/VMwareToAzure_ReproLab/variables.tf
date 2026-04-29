@@ -118,6 +118,11 @@ variable "linuxvm_template_name" {
   description = "The template to clone to create the VM"
 }
 
+variable "linuxvm_rootpass" {
+  type        = string
+  description = "The template to clone to create the VM"
+}
+
 #WINDOWS
 variable "winvm_count" {
   description = "Number of VM"
