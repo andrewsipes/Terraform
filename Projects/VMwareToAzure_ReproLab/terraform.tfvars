@@ -50,7 +50,7 @@ winvm_template_name = "Windows-2022-Template"
 #WINDOWS APP
 winappvm_count = 1
 winappvm_cpu = "4"
-winappvm_ram = "8192"
+winappvm_ram = "16384"
 winappvm_disk = 100
 winappvm_data_disk = 650
 winappvm_name = "RCMApp"

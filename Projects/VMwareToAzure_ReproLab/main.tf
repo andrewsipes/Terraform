@@ -89,6 +89,7 @@ resource "vsphere_virtual_machine" "linuxvm" {
       timeout = 30
     }
   }
+
 }
 
 resource "vsphere_virtual_machine" "winvm" {
@@ -124,7 +125,7 @@ resource "vsphere_virtual_machine" "winvm" {
         computer_name = "${each.value.alias}-${var.winvm_name}"
         run_once_command_list = ["cmd.exe /c net user Administrator /logonpasswordchg:yes",
         "cmd.exe /c tzutil /s \"Eastern Standard Time\"", 
-        "powershell Enable-NetFirewallRule -DisplayGroup "Windows Management Instrumentation (WMI)"",
+        "powershell Disable-NetFirewallRule -DisplayGroup 'Windows Management Instrumentation (WMI)'",
         "cmd.exe /c powershell -Command \"Set-NetConnectionProfile -Name 'corp.microsoft.com' -NetworkCategory Private\"",
         "cmd.exe /c powershell -Command \"logoff\"",]
       }    
@@ -163,7 +164,7 @@ resource "vsphere_virtual_machine" "winappvm" {
   disk {
     label = "${each.value.alias}-${var.winappvm_name}-data-disk"
     size  = data.vsphere_virtual_machine.winapptemplate.disks[1].size
-    thin_provisioned = data.vsphere_virtual_machine.winapptemplate.disks[1].thin_provisioned
+    thin_provisioned = true
     unit_number = data.vsphere_virtual_machine.winapptemplate.disks[1].unit_number
   }
 
