@@ -32,7 +32,7 @@ linuxvm_count = 1
 linuxvm_cpu = "2"
 linuxvm_ram = "2048"
 linuxvm_disk = 100
-linuxvm_name = "Ubuntu"
+linuxvm_name = "ubuntuRCMVM"
 linuxvm_guest_id= "ubuntu64Guest"
 linuxvm_template_name = "Ubuntu-2204-Template"
 linuxvm_domain = ""
@@ -43,13 +43,13 @@ winvm_count = 1
 winvm_cpu = "4"
 winvm_ram = "4096"
 winvm_disk = 100
-winvm_name = "Win"
+winvm_name = "WinRCMVM"
 winvm_guest_id= "windows964Guest"
 winvm_template_name = "Windows-2022-Template"
 
 #WINDOWS APP
 winappvm_count = 1
-winappvm_cpu = "4"
+winappvm_cpu = "8"
 winappvm_ram = "16384"
 winappvm_disk = 100
 winappvm_data_disk = 650

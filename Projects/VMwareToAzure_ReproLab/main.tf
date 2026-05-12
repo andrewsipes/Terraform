@@ -81,15 +81,11 @@ resource "vsphere_virtual_machine" "linuxvm" {
         host_name = "${each.value.alias}-${var.linuxvm_name}"
         domain    = var.linuxvm_domain
         time_zone = "America/New_York"
-        run_once_command_list = ["sudo bash -c "echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config"",
-        "Sudo systemctl restart ssh",
-        "Sudo bash -c "echo 'root:{var.linuxvm_rootpass}' | sudo chpasswd""]
       }     
       network_interface {}
       timeout = 30
     }
   }
-
 }
 
 resource "vsphere_virtual_machine" "winvm" {
@@ -163,9 +159,9 @@ resource "vsphere_virtual_machine" "winappvm" {
 
   disk {
     label = "${each.value.alias}-${var.winappvm_name}-data-disk"
-    size  = data.vsphere_virtual_machine.winapptemplate.disks[1].size
+    size  = var.winappvm_data_disk
     thin_provisioned = true
-    unit_number = data.vsphere_virtual_machine.winapptemplate.disks[1].unit_number
+    unit_number = 1
   }
 
   clone {
