@@ -82,8 +82,11 @@ resource "vsphere_virtual_machine" "linuxvm" {
         domain    = var.linuxvm_domain
         time_zone = "America/New_York"
       }     
-      network_interface {}
+
+      network_interface {
+      }
       timeout = 30
+
     }
   }
 }
@@ -172,6 +175,13 @@ resource "vsphere_virtual_machine" "winappvm" {
         run_once_command_list = ["cmd.exe /c net user Administrator /logonpasswordchg:yes",
         "cmd.exe /c tzutil /s \"Eastern Standard Time\"",
         "cmd.exe /c powershell -Command \"Set-NetConnectionProfile -Name 'corp.microsoft.com' -NetworkCategory Private\"",
+        "powershell Initialize-Disk -Number 1",
+        "powershell New-Partition -DiskNumber 1 -DriveLetter D -UseMaximumSize | Format-Volume -FileSystem NTFS -NewFileSystemLabel 'DATA' -Confirm:$false",
+        "powershell $ProgressPreference = 'SilentlyContinue'; wget 'https://aka.ms/V2ARcmApplianceCreationPowershellZip' -OutFile C:\\users\\administrator\\downloads\\asrzip.zip",
+        "powershell Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Confirm:$false",
+        "powershell Install-Module 7Zip4PowerShell -Scope CurrentUser -Force -Confirm:$false -Verbose -ErrorAction SilentlyContinue",
+        "powershell Expand-7Zip -ArchiveFileName 'C:\\users\\administrator\\downloads\\asrzip.zip' -TargetPath 'C:\\users\\administrator\\downloads\\asr'",
+        "powershell 'C:\\users\\administrator\\downloads\\DRAppliance\\DRInstaller.ps1'",
         "cmd.exe /c powershell -Command \"logoff\"",]
       }     
       network_interface {}
