@@ -82,9 +82,7 @@ resource "vsphere_virtual_machine" "linuxvm" {
         domain    = var.linuxvm_domain
         time_zone = "America/New_York"
       }     
-
-      network_interface {
-      }
+      network_interface{}
       timeout = 30
 
     }
