@@ -2,17 +2,6 @@
 # Purpose: Define all required details here values should be set in tfvars file
 
 #######################################
-# Variables
-
-variable "abrs_engineer" {
-  description = "list of engineers"
-  type = map(object({
-    alias = string
-    datastore = string
-  }))
-}
-
-#######################################
 # VCenter variables
 
 variable "vsphere_user" {
