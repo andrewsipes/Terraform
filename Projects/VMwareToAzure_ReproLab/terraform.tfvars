@@ -31,7 +31,7 @@ linuxvm_ram = "2048"
 linuxvm_disk = 100
 linuxvm_name = "ubuntuRCMVM"
 linuxvm_guest_id= "ubuntu64Guest"
-linuxvm_template_name = "Ubuntu-2404-Template"
+linuxvm_template_name = "Ubuntu-2204-Template2"
 
 #WINDOWS
 winvm_count = 1
