@@ -76,16 +76,17 @@ resource "vsphere_virtual_machine" "linuxvm" {
 
   clone {
     template_uuid = data.vsphere_virtual_machine.linuxtemplate.id
-    customize {
-      linux_options {
-        host_name = "${each.value.alias}-${var.linuxvm_name}"
-        domain    = var.linuxvm_domain
-        time_zone = "America/New_York"
-      }     
-      network_interface{}
-      timeout = 30
-
-    }
+    # Customize Blocks can be hit or miss with linux, you may not get an IP address if using this
+    # Generalization script on the template will prompt for a VM name automatically
+    # customize {
+    #   linux_options {
+    #     host_name = "${each.value.alias}-${var.linuxvm_name}"
+    #     domain    = var.linuxvm_domain
+    #     time_zone = "America/New_York"
+    #   }     
+    #   network_interface{}
+    #   timeout = 30
+    # }
   }
 }
 
@@ -175,12 +176,11 @@ resource "vsphere_virtual_machine" "winappvm" {
         "cmd.exe /c powershell -Command \"Set-NetConnectionProfile -Name 'corp.microsoft.com' -NetworkCategory Private\"",
         "powershell Initialize-Disk -Number 1",
         "powershell New-Partition -DiskNumber 1 -DriveLetter D -UseMaximumSize | Format-Volume -FileSystem NTFS -NewFileSystemLabel 'DATA' -Confirm:$false",
-        "powershell $ProgressPreference = 'SilentlyContinue'; wget 'https://aka.ms/V2ARcmApplianceCreationPowershellZip' -OutFile C:\\users\\administrator\\downloads\\asrzip.zip",
         "powershell Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Confirm:$false",
         "powershell Install-Module 7Zip4PowerShell -Scope CurrentUser -Force -Confirm:$false -Verbose -ErrorAction SilentlyContinue",
+        "powershell $ProgressPreference = 'SilentlyContinue'; wget 'https://aka.ms/V2ARcmApplianceCreationPowershellZip' -OutFile C:\\users\\administrator\\downloads\\asrzip.zip",
         "powershell Expand-7Zip -ArchiveFileName 'C:\\users\\administrator\\downloads\\asrzip.zip' -TargetPath 'C:\\users\\administrator\\downloads\\asr'",
-        "powershell 'C:\\users\\administrator\\downloads\\DRAppliance\\DRInstaller.ps1'",
-        "cmd.exe /c powershell -Command \"logoff\"",]
+        "powershell cd 'C:\\Users\\Administrator\\Downloads\\asr\\DRAppliance'; .\\DRInstaller.ps1; logoff"]
       }     
       network_interface {}
       timeout = 30
