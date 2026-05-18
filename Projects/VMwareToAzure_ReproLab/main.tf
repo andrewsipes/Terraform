@@ -11,7 +11,8 @@ terraform {
       version = "~>4.0"
     }
     vsphere = {
-      source = "hasicorp/vsphere"
+      source = "hashicorp/vsphere"
+      version = "~>2.12.0"
     }
   }
 }
@@ -40,8 +41,7 @@ data "vsphere_compute_cluster" "cluster" {
 
 # VM
 data "vsphere_datastore" "ds" {
-  for_each      = var.abrs_engineer
-  name          = each.value.datastore
+  name          = var.vm_datastore
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
@@ -69,12 +69,12 @@ data "vsphere_virtual_machine" "winapptemplate" {
 # AZURE
 
 resource "azurerm_resource_group" "rg" {
-name = "${var.abrs_engineer}-${var.az_rg_prefix}-V2ARCM"
+name = "${var.az_prefix}-V2ARCM"
 location = var.az_rg_location
 }
 
 resource "azurerm_recovery_services_vault" "Vault" {
-name = "${var.abrs_engineer}-${var.az_rg_prefix}-V2ARCM-RSV"
+name = "${var.az_prefix}-V2ARCM-RSV"
 location =  var.az_rg_location
 resource_group_name = azurerm_resource_group.rg.name
 sku = "Standard"
@@ -85,11 +85,10 @@ sku = "Standard"
 
 #linux
 resource "vsphere_virtual_machine" "linuxvm" {
-  for_each = var.abrs_engineer
 
-  name             = "${each.value.alias}-${var.linuxvm_name}"
+  name             = "${var.vm_alias}-${var.linuxvm_name}"
   resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
-  datastore_id     = data.vsphere_datastore.ds[each.key].id
+  datastore_id     = data.vsphere_datastore.ds.id
   folder = var.vm_folder
   num_cpus = var.linuxvm_cpu
   memory   = var.linuxvm_ram
@@ -103,7 +102,7 @@ resource "vsphere_virtual_machine" "linuxvm" {
   }
 
   disk {
-    label = "${each.value.alias}-${var.linuxvm_name}-disk"
+    label = "${var.vm_alias}-${var.linuxvm_name}-disk"
     size  = data.vsphere_virtual_machine.linuxtemplate.disks[0].size
     thin_provisioned = data.vsphere_virtual_machine.linuxtemplate.disks[0].thin_provisioned
 
@@ -116,7 +115,7 @@ resource "vsphere_virtual_machine" "linuxvm" {
     # Generalization script on the template will prompt for a VM name automatically
     # customize {
     #   linux_options {
-    #     host_name = "${each.value.alias}-${var.linuxvm_name}"
+    #     host_name = "${var.vm_alias}-${var.linuxvm_name}"
     #     domain    = var.linuxvm_domain
     #     time_zone = "America/New_York"
     #   }     
@@ -127,11 +126,10 @@ resource "vsphere_virtual_machine" "linuxvm" {
 }
 
 resource "vsphere_virtual_machine" "winvm" {
-  for_each = var.abrs_engineer
 
-  name             = "${each.value.alias}-${var.winvm_name}"
+  name             = "${var.vm_alias}-${var.winvm_name}"
   resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
-  datastore_id     = data.vsphere_datastore.ds[each.key].id
+  datastore_id     = data.vsphere_datastore.ds.id
   folder = var.vm_folder
   num_cpus = var.winvm_cpu
   memory   = var.winvm_ram
@@ -145,7 +143,7 @@ resource "vsphere_virtual_machine" "winvm" {
   }
 
   disk {
-    label = "${each.value.alias}-${var.winvm_name}-disk"
+    label = "${var.vm_alias}-${var.winvm_name}-disk"
     size  = data.vsphere_virtual_machine.wintemplate.disks[0].size
     thin_provisioned = data.vsphere_virtual_machine.wintemplate.disks[0].thin_provisioned
 
@@ -156,7 +154,7 @@ resource "vsphere_virtual_machine" "winvm" {
     template_uuid = data.vsphere_virtual_machine.wintemplate.id
     customize {
       windows_options {
-        computer_name = "${each.value.alias}-${var.winvm_name}"
+        computer_name = "${var.vm_alias}-${var.winvm_name}"
         run_once_command_list = ["cmd.exe /c net user Administrator /logonpasswordchg:yes",
         "cmd.exe /c tzutil /s \"Eastern Standard Time\"", 
         "powershell Disable-NetFirewallRule -DisplayGroup 'Windows Management Instrumentation (WMI)'",
@@ -170,11 +168,10 @@ resource "vsphere_virtual_machine" "winvm" {
 }
 
 resource "vsphere_virtual_machine" "winappvm" {
-  for_each = var.abrs_engineer
 
-  name             = "${each.value.alias}-${var.winappvm_name}"
+  name             = "${var.vm_alias}-${var.winappvm_name}"
   resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
-  datastore_id     = data.vsphere_datastore.ds[each.key].id
+  datastore_id     = data.vsphere_datastore.ds.id
   folder = var.vm_folder
   num_cpus = var.winappvm_cpu
   memory   = var.winappvm_ram
@@ -188,7 +185,7 @@ resource "vsphere_virtual_machine" "winappvm" {
   }
 
   disk {
-    label = "${each.value.alias}-${var.winappvm_name}-disk"
+    label = "${var.vm_alias}-${var.winappvm_name}-disk"
     size  = data.vsphere_virtual_machine.winapptemplate.disks[0].size
     thin_provisioned = data.vsphere_virtual_machine.winapptemplate.disks[0].thin_provisioned
 
@@ -196,7 +193,7 @@ resource "vsphere_virtual_machine" "winappvm" {
   }
 
   disk {
-    label = "${each.value.alias}-${var.winappvm_name}-data-disk"
+    label = "${var.vm_alias}-${var.winappvm_name}-data-disk"
     size  = var.winappvm_data_disk
     thin_provisioned = true
     unit_number = 1
@@ -206,7 +203,7 @@ resource "vsphere_virtual_machine" "winappvm" {
     template_uuid = data.vsphere_virtual_machine.winapptemplate.id
     customize {
      windows_options {
-        computer_name = "${each.value.alias}-${var.winappvm_name}"
+        computer_name = "${var.vm_alias}-${var.winappvm_name}"
         run_once_command_list = ["cmd.exe /c net user Administrator /logonpasswordchg:yes",
         "cmd.exe /c tzutil /s \"Eastern Standard Time\"",
         "cmd.exe /c powershell -Command \"Set-NetConnectionProfile -Name 'corp.microsoft.com' -NetworkCategory Private\"",
