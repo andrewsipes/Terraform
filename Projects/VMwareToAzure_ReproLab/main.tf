@@ -1,7 +1,21 @@
 # main.tf
-# Purpose: Main template file that deploys the training lab
+# Purpose: Main template file that deploys the V2A RCM Lab
 
-# vSphere
+#######################################
+# PROVIDERS
+
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~>4.0"
+    }
+    vsphere = {
+      source = "hasicorp/vsphere"
+    }
+  }
+}
+
 provider "vsphere" {
   user                 = var.vsphere_user
   password             = var.vsphere_password
@@ -9,6 +23,12 @@ provider "vsphere" {
   allow_unverified_ssl = true
 }
 
+provider "azurerm" {
+  features {}
+}
+
+#######################################
+# VSPHERE
 data "vsphere_datacenter" "dc" {
   name = var.vsphere_datacenter
 }
@@ -45,7 +65,23 @@ data "vsphere_virtual_machine" "winapptemplate" {
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
-# Create VMs
+#######################################
+# AZURE
+
+resource "azurerm_resource_group" "rg" {
+name = "${var.abrs_engineer}-${var.az_rg_prefix}-V2ARCM"
+location = var.az_rg_location
+}
+
+resource "azurerm_recovery_services_vault" "Vault" {
+name = "${var.abrs_engineer}-${var.az_rg_prefix}-V2ARCM-RSV"
+location =  var.az_rg_location
+resource_group_name = azurerm_resource_group.rg.name
+sku = "Standard"
+}
+
+#######################################
+# CREATE VM
 
 #linux
 resource "vsphere_virtual_machine" "linuxvm" {

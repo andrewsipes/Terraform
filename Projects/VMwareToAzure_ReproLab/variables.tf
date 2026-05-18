@@ -48,6 +48,21 @@ variable "vsphere_template_folder" {
 }
 
 #######################################
+# Azure variables
+
+variable "az_rg_location" {
+  type        = string
+  default     = "eastus2"
+  description = "Location of the resource group."
+}
+
+variable "az_rg_prefix" {
+  type        = string
+  default     = "ExternalProd"
+  description = "Prefix of the resource group name that's combined with a random ID so name is unique in your Azure subscription."
+}
+
+#######################################
 # VM variables
 
 variable "vm_alias" {
