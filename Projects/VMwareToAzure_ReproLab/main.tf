@@ -69,24 +69,39 @@ data "vsphere_virtual_machine" "winapptemplate" {
 # AZURE
 
 resource "azurerm_resource_group" "rg" {
-name = "${var.az_prefix}-V2ARCM"
-location = var.az_rg_location
+  name = "${var.az_prefix}-V2ARCM"
+  location = var.az_rg_location
 }
 
 resource "azurerm_recovery_services_vault" "Vault" {
-name = "${var.az_prefix}-V2ARCM-RSV"
-location =  var.az_rg_location
-resource_group_name = azurerm_resource_group.rg.name
-sku = "Standard"
+  name = "${var.az_prefix}-V2ARCM-RSV"
+  location =  var.az_rg_location
+  resource_group_name = azurerm_resource_group.rg.name
+  sku = "Standard"
 }
 
+resource "azurerm_storage_account" "sa" {
+  name = var.az_saname
+  resource_group_name = azurerm_resource_group.rg.name
+  location =  var.az_rg_location
+  account_tier = "Standard"
+  account_replication_type = "LRS"
+  min_tls_version = "TLS1_2"
+  https_traffic_only_enabled = true
+  shared_access_key_enabled = true 
+
+  tags = {
+  SecurityControl = "Ignore"
+  }
+}
 #######################################
 # CREATE VM
 
 #linux
 resource "vsphere_virtual_machine" "linuxvm" {
 
-  name             = "${var.vm_alias}-${var.linuxvm_name}"
+  count = var.linuxvm_count
+  name             = "${var.vm_alias}-${var.linuxvm_name}-${count.index}"
   resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
   datastore_id     = data.vsphere_datastore.ds.id
   folder = var.vm_folder
@@ -126,8 +141,8 @@ resource "vsphere_virtual_machine" "linuxvm" {
 }
 
 resource "vsphere_virtual_machine" "winvm" {
-
-  name             = "${var.vm_alias}-${var.winvm_name}"
+  count = var.winvm_count
+  name             = "${var.vm_alias}-${var.winvm_name}-${count.index}"
   resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
   datastore_id     = data.vsphere_datastore.ds.id
   folder = var.vm_folder
@@ -168,8 +183,8 @@ resource "vsphere_virtual_machine" "winvm" {
 }
 
 resource "vsphere_virtual_machine" "winappvm" {
-
-  name             = "${var.vm_alias}-${var.winappvm_name}"
+  count = var.winappvm_count
+  name             = "${var.vm_alias}-${var.winappvm_name}-${count.index}"
   resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
   datastore_id     = data.vsphere_datastore.ds.id
   folder = var.vm_folder

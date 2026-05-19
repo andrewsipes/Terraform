@@ -15,6 +15,7 @@ vsphere_template_folder = "Templates"
 # Azure variables
 az_rg_location = "East US 2"
 az_prefix = "Asipes-ExternalProd"
+az_saname = "asipesrcmsa"
 
 #######################################
 # VM variables
