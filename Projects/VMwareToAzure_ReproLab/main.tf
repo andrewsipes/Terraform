@@ -105,7 +105,7 @@ resource "azurerm_storage_account" "sa" {
 resource "vsphere_virtual_machine" "linuxvm" {
 
   count = var.linuxvm_count
-  name             = "${var.vm_alias}-${var.linuxvm_name}-${count.index}"
+  name = var.winappvm_count > 1 ? "${var.vm_alias}-${var.linuxvm_name}-${count.index + 1}" : "${var.vm_alias}-${var.linuxvm_name}"
   resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
   datastore_id     = data.vsphere_datastore.ds.id
   folder = var.vm_folder
@@ -146,7 +146,7 @@ resource "vsphere_virtual_machine" "linuxvm" {
 
 resource "vsphere_virtual_machine" "winvm" {
   count = var.winvm_count
-  name             = "${var.vm_alias}-${var.winvm_name}-${count.index}"
+   name = var.winvm_count > 1 ? "${var.vm_alias}-${var.winvm_name}-${count.index + 1}" : "${var.vm_alias}-${var.winvm_name}"
   resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
   datastore_id     = data.vsphere_datastore.ds.id
   folder = var.vm_folder
@@ -188,7 +188,7 @@ resource "vsphere_virtual_machine" "winvm" {
 
 resource "vsphere_virtual_machine" "winappvm" {
   count = var.winappvm_count
-  name             = "${var.vm_alias}-${var.winappvm_name}-${count.index}"
+  name = var.winappvm_count > 1 ? "${var.vm_alias}-${var.winappvm_name}-${count.index + 1}" : "${var.vm_alias}-${var.winappvm_name}"
   resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
   datastore_id     = data.vsphere_datastore.ds.id
   folder = var.vm_folder
