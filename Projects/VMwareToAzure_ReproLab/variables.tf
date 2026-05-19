@@ -33,7 +33,6 @@ variable "vsphere_cluster" {
 variable "vsphere_template_folder" {
   type        = string
   description = "Template folder"
-  default = "Templates"
 }
 
 #######################################
@@ -47,13 +46,11 @@ variable "az_rg_location" {
 
 variable "az_prefix" {
   type        = string
-  default     = "Asipes-ExternalProd"
   description = "Prefix of the resource group name that's combined with a random ID so name is unique in your Azure subscription."
 }
 
 variable "az_saname" {
   type        = string
-  default     = "asipesrcmsa"
   description = "storage account name"
 }
 
@@ -63,13 +60,11 @@ variable "az_saname" {
 variable "vm_alias" {
   type        = string
   description = "Name of VM prefix"
-  default     =  ""
 }
 
 variable "vm_folder" {
   type        = string
   description = "folder where cloned vms should reside"
-  default = ""
 }
 
 variable "vm_datastore" {
