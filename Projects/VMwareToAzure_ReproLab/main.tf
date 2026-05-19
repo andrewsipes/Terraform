@@ -105,7 +105,7 @@ resource "azurerm_storage_account" "sa" {
 resource "vsphere_virtual_machine" "linuxvm" {
 
   count = var.linuxvm_count
-  name = var.winappvm_count > 1 ? "${var.vm_alias}-${var.linuxvm_name}-${count.index + 1}" : "${var.vm_alias}-${var.linuxvm_name}"
+  name = var.linuxvm_count > 1 ? "${var.vm_alias}-${var.linuxvm_name}-${count.index + 1}" : "${var.vm_alias}-${var.linuxvm_name}"
   resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
   datastore_id     = data.vsphere_datastore.ds.id
   folder = var.vm_folder
@@ -121,7 +121,7 @@ resource "vsphere_virtual_machine" "linuxvm" {
   }
 
   disk {
-    label = label = var.linuxvm_count > 1 ? "${var.vm_alias}-${var.linuxvm_name}-${count.index + 1}-disk" : "${var.vm_alias}-${var.linuxvm_name}-disk"
+    label = var.linuxvm_count > 1 ? "${var.vm_alias}-${var.linuxvm_name}-${count.index + 1}-disk" : "${var.vm_alias}-${var.linuxvm_name}-disk"
     size  = data.vsphere_virtual_machine.linuxtemplate.disks[0].size
     thin_provisioned = data.vsphere_virtual_machine.linuxtemplate.disks[0].thin_provisioned
 
