@@ -121,7 +121,7 @@ resource "vsphere_virtual_machine" "linuxvm" {
   }
 
   disk {
-    label = "${var.vm_alias}-${var.linuxvm_name}-disk"
+    label = label = var.linuxvm_count > 1 ? "${var.vm_alias}-${var.linuxvm_name}-${count.index + 1}-disk" : "${var.vm_alias}-${var.linuxvm_name}-disk"
     size  = data.vsphere_virtual_machine.linuxtemplate.disks[0].size
     thin_provisioned = data.vsphere_virtual_machine.linuxtemplate.disks[0].thin_provisioned
 
@@ -146,7 +146,7 @@ resource "vsphere_virtual_machine" "linuxvm" {
 
 resource "vsphere_virtual_machine" "winvm" {
   count = var.winvm_count
-   name = var.winvm_count > 1 ? "${var.vm_alias}-${var.winvm_name}-${count.index + 1}" : "${var.vm_alias}-${var.winvm_name}"
+  name = var.winvm_count > 1 ? "${var.vm_alias}-${var.winvm_name}-${count.index + 1}" : "${var.vm_alias}-${var.winvm_name}"
   resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
   datastore_id     = data.vsphere_datastore.ds.id
   folder = var.vm_folder
@@ -162,7 +162,7 @@ resource "vsphere_virtual_machine" "winvm" {
   }
 
   disk {
-    label = "${var.vm_alias}-${var.winvm_name}-disk"
+    label = var.winvm_count > 1 ? "${var.vm_alias}-${var.winvm_name}-${count.index + 1}-disk" : "${var.vm_alias}-${var.winvm_name}-disk"
     size  = data.vsphere_virtual_machine.wintemplate.disks[0].size
     thin_provisioned = data.vsphere_virtual_machine.wintemplate.disks[0].thin_provisioned
 
@@ -204,7 +204,7 @@ resource "vsphere_virtual_machine" "winappvm" {
   }
 
   disk {
-    label = "${var.vm_alias}-${var.winappvm_name}-disk"
+    label = var.winappvm_count > 1 ? "${var.vm_alias}-${var.winappvm_name}-${count.index + 1}-disk" : "${var.vm_alias}-${var.winappvm_name}-disk"
     size  = data.vsphere_virtual_machine.winapptemplate.disks[0].size
     thin_provisioned = data.vsphere_virtual_machine.winapptemplate.disks[0].thin_provisioned
 
@@ -212,7 +212,7 @@ resource "vsphere_virtual_machine" "winappvm" {
   }
 
   disk {
-    label = "${var.vm_alias}-${var.winappvm_name}-data-disk"
+    label = var.winappvm_count > 1 ? "${var.vm_alias}-${var.winappvm_name}-${count.index + 1}-data-disk" : "${var.vm_alias}-${var.winappvm_name}-data-disk"
     size  = var.winappvm_data_disk
     thin_provisioned = true
     unit_number = 1
