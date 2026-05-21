@@ -77,7 +77,7 @@ resource "azurerm_resource_group" "rg" {
   location = var.az_rg_location
 }
 
-resource "azurerm_recovery_services_vault" "Vault" {
+resource "azurerm_recovery_services_vault" "rsv" {
   name = "${var.az_prefix}-V2ARCM-RSV"
   location =  var.az_rg_location
   resource_group_name = azurerm_resource_group.rg.name

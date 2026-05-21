@@ -13,17 +13,17 @@ vsphere_template_folder = "Templates"
 
 #######################################
 # Azure variables
-az_rg_location = "East US 2"
-az_prefix = "Asipes-ExternalProd"
-az_saname = "asipesrcmsa"
+az_rg_location = ""
+az_prefix = ""
+az_saname = ""
 
 #######################################
 # VM variables
 
-vm_folder = "asipes"
-vm_datastore = "Datastore 2"
-vm_network = "VM_Switch_Network"
-vm_alias = "asipes"
+vm_folder = ""
+vm_datastore = ""
+vm_network = ""
+vm_alias = ""
 
 #LINUX
 linuxvm_count = 1
@@ -32,7 +32,7 @@ linuxvm_ram = "2048"
 linuxvm_disk = 100
 linuxvm_name = "ubuntuRCMVM"
 linuxvm_guest_id= "ubuntu64Guest"
-linuxvm_template_name = "Ubuntu-2204-Template2"
+linuxvm_template_name = "Ubuntu-2204-Template"
 
 #WINDOWS
 winvm_count = 1
