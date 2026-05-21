@@ -8,8 +8,8 @@ vsphere_user = ""
 vsphere_password = ""
 vsphere_server = ""
 vsphere_datacenter = ""
-vsphere_cluster = "ESXi"
-vsphere_template_folder = "Templates"
+vsphere_cluster = ""
+vsphere_template_folder = ""
 
 #######################################
 # Azure variables
