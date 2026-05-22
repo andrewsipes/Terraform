@@ -9,3 +9,6 @@ Deploys a VMware to Azure Site Recovery Lab including: Windows / Linux VMs, Appl
 
 ### AzureMigrate_Repro Lab
 WIP: Based off of VMwareToAzure_Repro Lab
+
+### Ansible Lab
+Deploys a basic Ansible lab with a set number of VMs
