@@ -69,15 +69,8 @@ data "vsphere_virtual_machine" "winapptemplate" {
 # AZURE
 
 resource "azurerm_resource_group" "rg" {
-name = "${var.az_prefix}-V2ARCM"
+name = "${var.az_prefix}-AzMig"
 location = var.az_rg_location
-}
-
-resource "azurerm_recovery_services_vault" "Vault" {
-name = "${var.az_prefix}-V2ARCM-RSV"
-location =  var.az_rg_location
-resource_group_name = azurerm_resource_group.rg.name
-sku = "Standard"
 }
 
 #######################################
@@ -169,7 +162,7 @@ resource "vsphere_virtual_machine" "winvm" {
 
 resource "vsphere_virtual_machine" "winappvm" {
 
-  name             = "${var.vm_alias}-${var.winappvm_name}"
+  name             = "${var.vm_alias}-${var.winappvm_scenario}${var.winappvm_name}"
   resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
   datastore_id     = data.vsphere_datastore.ds.id
   folder = var.vm_folder
@@ -211,9 +204,9 @@ resource "vsphere_virtual_machine" "winappvm" {
         "powershell New-Partition -DiskNumber 1 -DriveLetter D -UseMaximumSize | Format-Volume -FileSystem NTFS -NewFileSystemLabel 'DATA' -Confirm:$false",
         "powershell Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Confirm:$false",
         "powershell Install-Module 7Zip4PowerShell -Scope CurrentUser -Force -Confirm:$false -Verbose -ErrorAction SilentlyContinue",
-        "powershell $ProgressPreference = 'SilentlyContinue'; wget 'https://aka.ms/V2ARcmApplianceCreationPowershellZip' -OutFile C:\\users\\administrator\\downloads\\asrzip.zip",
-        "powershell Expand-7Zip -ArchiveFileName 'C:\\users\\administrator\\downloads\\asrzip.zip' -TargetPath 'C:\\users\\administrator\\downloads\\asr'",
-        "powershell cd 'C:\\Users\\Administrator\\Downloads\\asr\\DRAppliance'; .\\DRInstaller.ps1; logoff"]
+        "powershell $ProgressPreference = 'SilentlyContinue'; wget 'https://go.microsoft.com/fwlink/?linkid=2191847' -OutFile C:\\users\\administrator\\downloads\\migrate.zip",
+        "powershell Expand-7Zip -ArchiveFileName 'C:\\users\\administrator\\downloads\\migrate.zip' -TargetPath 'C:\\users\\administrator\\downloads\\migrate'",
+        "cmd.exe /d /c '(echo 1& echo Y) | powershell.exe -NoProfile -File .\AzureMigrateInstaller.ps1 -Scenario ${var.winapp_scenario} -Cloud Public'"]
       }     
       network_interface {}
       timeout = 30

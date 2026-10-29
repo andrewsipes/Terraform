@@ -14,7 +14,7 @@ vsphere_template_folder = ""
 #######################################
 # Azure variables
 az_rg_location = "East US 2"
-az_prefix = "Asipes-ExternalProd"
+az_prefix = "Asipes"
 
 #######################################
 # VM variables
@@ -29,7 +29,7 @@ linuxvm_count = 1
 linuxvm_cpu = "2"
 linuxvm_ram = "2048"
 linuxvm_disk = 100
-linuxvm_name = "ubuntuRCMVM"
+linuxvm_name = "ubuntuVM"
 linuxvm_guest_id= "ubuntu64Guest"
 linuxvm_template_name = "Ubuntu-2404-Template"
 
@@ -38,7 +38,7 @@ winvm_count = 1
 winvm_cpu = "4"
 winvm_ram = "4096"
 winvm_disk = 100
-winvm_name = "WinRCMVM"
+winvm_name = "WinVM"
 winvm_guest_id= "windows964Guest"
 winvm_template_name = "Windows-2022-Template"
 
@@ -48,6 +48,7 @@ winappvm_cpu = "8"
 winappvm_ram = "16384"
 winappvm_disk = 100
 winappvm_data_disk = 650
-winappvm_name = "RCMApp"
+winappvm_name = "MigApp"
 winappvm_guest_id= "windows964Guest"
 winappvm_template_name = "Windows-2022-Template"
+winappvm_scenario = "Physical"
