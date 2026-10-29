@@ -208,3 +208,9 @@ variable "winappvm_template_name" {
   type        = string
   description = "The template to clone to create the VM"
 }
+
+variable "winappvm_scenario" {
+  type        = string
+  default     = "vmware"
+  description = "Appliance type, can be Vmware, physical, or HyperV"
+}

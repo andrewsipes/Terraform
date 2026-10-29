@@ -206,7 +206,7 @@ resource "vsphere_virtual_machine" "winappvm" {
         "powershell Install-Module 7Zip4PowerShell -Scope CurrentUser -Force -Confirm:$false -Verbose -ErrorAction SilentlyContinue",
         "powershell $ProgressPreference = 'SilentlyContinue'; wget 'https://go.microsoft.com/fwlink/?linkid=2191847' -OutFile C:\\users\\administrator\\downloads\\migrate.zip",
         "powershell Expand-7Zip -ArchiveFileName 'C:\\users\\administrator\\downloads\\migrate.zip' -TargetPath 'C:\\users\\administrator\\downloads\\migrate'",
-        "cmd.exe /d /c '(echo 1& echo Y) | powershell.exe -NoProfile -File .\AzureMigrateInstaller.ps1 -Scenario ${var.winapp_scenario} -Cloud Public'"]
+        "cmd.exe /d /c \"(echo 1& echo Y) | powershell.exe -NoProfile -File ./AzureMigrateInstaller.ps1 -Scenario ${var.winappvm_scenario} -Cloud Public\""]
       }     
       network_interface {}
       timeout = 30
