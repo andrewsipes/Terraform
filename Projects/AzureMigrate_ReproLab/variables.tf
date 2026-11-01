@@ -47,7 +47,7 @@ variable "az_rg_location" {
 
 variable "az_prefix" {
   type        = string
-  default     = "Asipes-ExternalProd"
+  default     = "Asipes"
   description = "Prefix of the resource group name that's combined with a random ID so name is unique in your Azure subscription."
 }
 

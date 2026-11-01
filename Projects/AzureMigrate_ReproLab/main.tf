@@ -6,13 +6,12 @@
 
 terraform {
   required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~>4.0"
-    }
     vsphere = {
       source = "hashicorp/vsphere"
       version = "~>2.12.0"
+    }
+     azapi = {
+      source = "Azure/azapi"
     }
   }
 }
@@ -22,10 +21,6 @@ provider "vsphere" {
   password             = var.vsphere_password
   vsphere_server       = var.vsphere_server
   allow_unverified_ssl = true
-}
-
-provider "azurerm" {
-  features {}
 }
 
 #######################################
@@ -68,9 +63,22 @@ data "vsphere_virtual_machine" "winapptemplate" {
 #######################################
 # AZURE
 
-resource "azurerm_resource_group" "rg" {
-name = "${var.az_prefix}-AzMig"
-location = var.az_rg_location
+resource "azapi_resource" "rg" {
+  type     = "Microsoft.Resources/resourceGroups@2020-06-01"
+  name     =  "${var.az_prefix}-AzMig-${var.winappvm_scenario}"
+  location =  var.az_rg_location
+}
+
+resource "azapi_resource" "project" {
+  type      = "Microsoft.Migrate/migrateProjects@2020-05-01"
+  parent_id = azapi_resource.rg.id
+  name      = "${var.az_prefix}-AzMig-${var.winappvm_scenario}"
+  location  = "CentralUS"
+  body = {
+    properties = {
+      publicNetworkAccess     = "Enabled"
+    }
+  }
 }
 
 #######################################
@@ -204,7 +212,7 @@ resource "vsphere_virtual_machine" "winappvm" {
         "powershell New-Partition -DiskNumber 1 -DriveLetter D -UseMaximumSize | Format-Volume -FileSystem NTFS -NewFileSystemLabel 'DATA' -Confirm:$false",
         "powershell Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Confirm:$false",
         "powershell Install-Module 7Zip4PowerShell -Scope CurrentUser -Force -Confirm:$false -Verbose -ErrorAction SilentlyContinue",
-        "powershell $ProgressPreference = 'SilentlyContinue'; wget 'https://go.microsoft.com/fwlink/?linkid=2191847' -OutFile C:\\users\\administrator\\downloads\\migrate.zip",
+        "powershell $ProgressPreference = 'SilentlyContinue'; wget 'https://download.microsoft.com/download/f2fae98a-9ff0-45e2-a0cb-e009e1ad4df6/AzureMigrateInstaller.zip' -OutFile C:\\users\\administrator\\downloads\\migrate.zip",
         "powershell Expand-7Zip -ArchiveFileName 'C:\\users\\administrator\\downloads\\migrate.zip' -TargetPath 'C:\\users\\administrator\\downloads\\migrate'",
         "cmd.exe /d /c \"(echo 1& echo Y) | powershell.exe -NoProfile -File ./AzureMigrateInstaller.ps1 -Scenario ${var.winappvm_scenario} -Cloud Public\""]
       }     
