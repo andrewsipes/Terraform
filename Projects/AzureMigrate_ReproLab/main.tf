@@ -69,6 +69,52 @@ resource "azapi_resource" "rg" {
   location =  var.az_rg_location
 }
 
+resource "azapi_resource" "sa" {
+  type      = "Microsoft.Storage/storageAccounts@2021-09-01"
+  parent_id = azapi_resource.rg.id
+  name      = var.az_saname
+  location  = var.az_rg_location
+  tags = {
+    SecurityControl = "Ignore"
+  }
+  body = {
+    kind = "StorageV2"
+    properties = {
+      accessTier                   = "Hot"
+      allowBlobPublicAccess        = true
+      allowCrossTenantReplication  = true
+      allowSharedKeyAccess         = true
+      defaultToOAuthAuthentication = false
+      encryption = {
+        keySource = "Microsoft.Storage"
+        services = {
+          queue = {
+            keyType = "Service"
+          }
+          table = {
+            keyType = "Service"
+          }
+        }
+      }
+      isHnsEnabled      = false
+      isNfsV3Enabled    = false
+      isSftpEnabled     = false
+      minimumTlsVersion = "TLS1_2"
+      networkAcls = {
+        defaultAction = "Allow"
+      }
+      publicNetworkAccess      = "Enabled"
+      supportsHttpsTrafficOnly = true
+    }
+    sku = {
+      name = "Standard_LRS"
+    }
+  }
+  schema_validation_enabled = false
+  response_export_values    = ["*"]
+}
+
+
 resource "azapi_resource" "project" {
   type      = "Microsoft.Migrate/migrateProjects@2020-05-01"
   parent_id = azapi_resource.rg.id
@@ -77,6 +123,7 @@ resource "azapi_resource" "project" {
   body = {
     properties = {
       publicNetworkAccess     = "Enabled"
+      utilityStorageAccountId = azapi_resource.sa.id
     }
   }
 }
@@ -214,7 +261,7 @@ resource "vsphere_virtual_machine" "winappvm" {
         "powershell Install-Module 7Zip4PowerShell -Scope CurrentUser -Force -Confirm:$false -Verbose -ErrorAction SilentlyContinue",
         "powershell $ProgressPreference = 'SilentlyContinue'; wget 'https://download.microsoft.com/download/f2fae98a-9ff0-45e2-a0cb-e009e1ad4df6/AzureMigrateInstaller.zip' -OutFile C:\\users\\administrator\\downloads\\migrate.zip",
         "powershell Expand-7Zip -ArchiveFileName 'C:\\users\\administrator\\downloads\\migrate.zip' -TargetPath 'C:\\users\\administrator\\downloads\\migrate'",
-        "cmd.exe /d /c \"(echo 1& echo Y) | powershell.exe -NoProfile -File ./AzureMigrateInstaller.ps1 -Scenario ${var.winappvm_scenario} -Cloud Public\""]
+        "cmd.exe /d /c \"(echo 1& echo Y) | powershell.exe -NoProfile -File C:\\users\\administrator\\downloads\\migrate\\AzureMigrateInstaller.ps1 -Scenario ${var.winappvm_scenario} -Cloud Public\""]
       }     
       network_interface {}
       timeout = 30

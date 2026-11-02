@@ -15,6 +15,7 @@ vsphere_template_folder = ""
 # Azure variables
 az_rg_location = "East US 2"
 az_prefix = "Asipes"
+az_saname = "asipesazmigsa"
 
 #######################################
 # VM variables
