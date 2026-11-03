@@ -219,4 +219,11 @@ variable "winappvm_scenario" {
   type        = string
   default     = "vmware"
   description = "Appliance type, can be Vmware, physical, or HyperV"
+
+  validation {
+    condition = contains (["VMware", "HyperV", "Physical"],
+    var.winappvm_scenario)
+
+    error_message = "Scenario name must be VMware, HyperV, or Physical"
+  }
 }

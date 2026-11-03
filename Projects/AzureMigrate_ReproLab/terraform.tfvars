@@ -52,4 +52,4 @@ winappvm_data_disk = 650
 winappvm_name = "MigApp"
 winappvm_guest_id= "windows964Guest"
 winappvm_template_name = "Windows-2022-Template"
-winappvm_scenario = "Physical"
+winappvm_scenario = "VMware"
