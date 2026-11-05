@@ -126,14 +126,12 @@ resource "azapi_resource" "project" {
       utilityStorageAccountId = azapi_resource.sa.id
     }
   }
-
-
 }
 
 resource "azapi_resource" "ServerDiscoverySolution" {
-  type      = "Microsoft.Migrate/migrateProjects/solutions@2018-09-01-preview"
+  type      = "Microsoft.Migrate/migrateProjects/solutions@2020-06-01-preview"
   parent_id = azapi_resource.project.id
-  name      = "${var.az_prefix}AzMig${var.winappvm_scenario}ServerDiscovery"
+  name      = "Server-Discovery-ServerDiscovery"
 
   body = {
     properties = {
@@ -143,13 +141,14 @@ resource "azapi_resource" "ServerDiscoverySolution" {
       status = "Inactive"
     }
   }
+
+  schema_validation_enabled = false
 }
 
-
 resource "azapi_resource" "ServerAssessmentSolution" {
-  type      = "Microsoft.Migrate/migrateProjects/solutions@2018-09-01-preview"
+  type      = "Microsoft.Migrate/migrateProjects/solutions@2020-06-01-preview"
   parent_id = azapi_resource.project.id
-  name      = "${var.az_prefix}AzMig${var.winappvm_scenario}ServerAssessment"
+  name      = "Server-Assessment-ServerAssessment"
 
   body = {
     properties = {
@@ -159,12 +158,14 @@ resource "azapi_resource" "ServerAssessmentSolution" {
       status = "Active"
     }
   }
+
+  schema_validation_enabled = false
 }
 
 resource "azapi_resource" "ServerMigrationSolution" {
-  type      = "Microsoft.Migrate/migrateProjects/solutions@2018-09-01-preview"
+  type      = "Microsoft.Migrate/migrateProjects/solutions@2020-06-01-preview"
   parent_id = azapi_resource.project.id
-  name      = "${var.az_prefix}AzMig${var.winappvm_scenario}ServerMigration"
+  name      = "Servers-Migration-ServerMigration"
 
   body = {
     properties = {
@@ -174,6 +175,8 @@ resource "azapi_resource" "ServerMigrationSolution" {
       status = "Active"
     }
   }
+
+  schema_validation_enabled = false
 }
 
 #######################################
@@ -309,7 +312,11 @@ resource "vsphere_virtual_machine" "winappvm" {
         "powershell Install-Module 7Zip4PowerShell -Scope CurrentUser -Force -Confirm:$false -Verbose -ErrorAction SilentlyContinue",
         "powershell $ProgressPreference = 'SilentlyContinue'; wget 'https://download.microsoft.com/download/f2fae98a-9ff0-45e2-a0cb-e009e1ad4df6/AzureMigrateInstaller.zip' -OutFile C:\\users\\administrator\\downloads\\migrate.zip",
         "powershell Expand-7Zip -ArchiveFileName 'C:\\users\\administrator\\downloads\\migrate.zip' -TargetPath 'C:\\users\\administrator\\downloads\\migrate'",
-        "cmd.exe /d /c \"${var.winappvm_scenario} ==  "VMware" ? (echo 1& echo 1& echo Y) : (echo 1& echo Y) | powershell.exe -NoProfile -File C:\\users\\administrator\\downloads\\migrate\\AzureMigrateInstaller.ps1 -Scenario ${var.winappvm_scenario} -Cloud Public\""]
+         format(
+          "cmd.exe /d /s /c \"%s | powershell.exe -NoProfile -File C:\\users\\administrator\\downloads\\migrate\\AzureMigrateInstaller.ps1 -Scenario %s -Cloud Public\"",
+          var.winappvm_scenario == "VMware" ? "(echo 1& echo 1& echo Y)" : "(echo 1& echo Y)",
+          var.winappvm_scenario
+        )]
       }     
       network_interface {}
       timeout = 30
