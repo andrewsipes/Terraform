@@ -65,8 +65,8 @@ data "vsphere_virtual_machine" "winapptemplate" {
 
 resource "azapi_resource" "rg" {
   type     = "Microsoft.Resources/resourceGroups@2020-06-01"
-  name     =  "${var.az_prefix}-AzMig-${var.winappvm_scenario}"
-  location =  var.az_rg_location
+  name     = "${var.az_prefix}-AzMig-${var.winappvm_scenario}"
+  location = var.az_rg_location
 }
 
 resource "azapi_resource" "sa" {
@@ -74,19 +74,24 @@ resource "azapi_resource" "sa" {
   parent_id = azapi_resource.rg.id
   name      = var.az_saname
   location  = var.az_rg_location
+
   tags = {
     SecurityControl = "Ignore"
   }
+
   body = {
     kind = "StorageV2"
+
     properties = {
       accessTier                   = "Hot"
       allowBlobPublicAccess        = true
       allowCrossTenantReplication  = true
       allowSharedKeyAccess         = true
       defaultToOAuthAuthentication = false
+
       encryption = {
         keySource = "Microsoft.Storage"
+
         services = {
           queue = {
             keyType = "Service"
@@ -96,30 +101,35 @@ resource "azapi_resource" "sa" {
           }
         }
       }
+
       isHnsEnabled      = false
       isNfsV3Enabled    = false
       isSftpEnabled     = false
       minimumTlsVersion = "TLS1_2"
+
       networkAcls = {
         defaultAction = "Allow"
       }
+
       publicNetworkAccess      = "Enabled"
       supportsHttpsTrafficOnly = true
     }
+
     sku = {
       name = "Standard_LRS"
     }
   }
+
   schema_validation_enabled = false
   response_export_values    = ["*"]
 }
-
 
 resource "azapi_resource" "project" {
   type      = "Microsoft.Migrate/migrateProjects@2020-05-01"
   parent_id = azapi_resource.rg.id
   name      = "${var.az_prefix}AzMig${var.winappvm_scenario}"
-  location  = "CentralUS"
+  location  = "centralus"
+
   body = {
     properties = {
       publicNetworkAccess     = "Enabled"
@@ -128,36 +138,40 @@ resource "azapi_resource" "project" {
   }
 }
 
-resource "azapi_resource" "ServerDiscoverySolution" {
+resource "azapi_resource" "ServerAssessmentSolution" {
   type      = "Microsoft.Migrate/migrateProjects/solutions@2020-06-01-preview"
   parent_id = azapi_resource.project.id
-  name      = "Server-Discovery-ServerDiscovery"
+  name      = "Servers-Assessment-ServerAssessment"
 
   body = {
     properties = {
-      goal = "Servers"
-      purpose = "Discovery"
-      tool = "ServerDiscovery"
-      status = "Inactive"
+      goal    = "Servers"
+      purpose = "Assessment"
+      tool    = "ServerAssessment"
+      status  = "Active"
     }
   }
 
   schema_validation_enabled = false
 }
 
-resource "azapi_resource" "ServerAssessmentSolution" {
+resource "azapi_resource" "ServerDiscoverySolution" {
   type      = "Microsoft.Migrate/migrateProjects/solutions@2020-06-01-preview"
   parent_id = azapi_resource.project.id
-  name      = "Server-Assessment-ServerAssessment"
+  name      = "Servers-Discovery-ServerDiscovery"
 
   body = {
     properties = {
-      goal = "Servers"
-      purpose = "Assessment"
-      tool = "ServerAssessment"
-      status = "Active"
+      goal    = "Servers"
+      purpose = "Discovery"
+      tool    = "ServerDiscovery"
+      status  = "Inactive"
     }
   }
+
+  depends_on = [
+    azapi_resource.ServerAssessmentSolution
+  ]
 
   schema_validation_enabled = false
 }
@@ -169,15 +183,41 @@ resource "azapi_resource" "ServerMigrationSolution" {
 
   body = {
     properties = {
-      goal = "Servers"
+      goal    = "Servers"
       purpose = "Migration"
-      tool = "ServerMigration"
-      status = "Active"
+      tool    = "ServerMigration"
+      status  = "Active"
     }
   }
 
+  depends_on = [
+    azapi_resource.ServerDiscoverySolution
+  ]
+
   schema_validation_enabled = false
 }
+
+resource "azapi_resource" "DataReplication" {
+  type      = "Microsoft.Migrate/migrateProjects/solutions@2020-06-01-preview"
+  parent_id = azapi_resource.project.id
+  name      = "Servers-Migration-ServerMigration_DataReplication"
+
+  body = {
+    properties = {
+      goal    = "Servers"
+      purpose = "Migration"
+      tool    = "ServerMigration_DataReplication"
+      status  = "Inactive"
+    }
+  }
+
+  depends_on = [
+    azapi_resource.ServerMigrationSolution
+  ]
+
+  schema_validation_enabled = false
+}
+
 
 #######################################
 # CREATE VM
