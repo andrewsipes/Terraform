@@ -45,6 +45,12 @@ variable "az_rg_location" {
   description = "Location of the resource group."
 }
 
+variable "az_proj_location" {
+  type        = string
+  default     = "CentralUS"
+  description = "Location of the migrate project"
+}
+
 variable "az_saname" {
   type        = string
   default     = "asipesazmigsa"

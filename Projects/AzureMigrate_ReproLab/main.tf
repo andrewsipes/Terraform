@@ -128,7 +128,7 @@ resource "azapi_resource" "project" {
   type      = "Microsoft.Migrate/migrateProjects@2020-05-01"
   parent_id = azapi_resource.rg.id
   name      = "${var.az_prefix}AzMig${var.winappvm_scenario}"
-  location  = "centralus"
+  location  = var.az_proj_location
 
   body = {
     properties = {
@@ -196,28 +196,6 @@ resource "azapi_resource" "ServerMigrationSolution" {
 
   schema_validation_enabled = false
 }
-
-resource "azapi_resource" "DataReplication" {
-  type      = "Microsoft.Migrate/migrateProjects/solutions@2020-06-01-preview"
-  parent_id = azapi_resource.project.id
-  name      = "Servers-Migration-ServerMigration_DataReplication"
-
-  body = {
-    properties = {
-      goal    = "Servers"
-      purpose = "Migration"
-      tool    = "ServerMigration_DataReplication"
-      status  = "Inactive"
-    }
-  }
-
-  depends_on = [
-    azapi_resource.ServerMigrationSolution
-  ]
-
-  schema_validation_enabled = false
-}
-
 
 #######################################
 # CREATE VM
